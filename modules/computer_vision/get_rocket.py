@@ -38,50 +38,55 @@ def get_rocket(img):
 
     return rocket_gray, rocket_rgb
 
+
 def find_mask(img):
+    # Get binary image
     (thresh, im_bw) = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
+    # Get mask and inverse of image
     h, w = im_bw.shape[:2]
     mask = np.zeros((h + 2, w + 2), np.uint8)
     inv = cv2.bitwise_not(im_bw)
 
-    cv2.floodFill(inv, mask, (0, 0), 255)
+    # Fill the background
+    im_flood_fill = inv.astype("uint8")
+    cv2.floodFill(im_flood_fill, mask, (0, 0), 255)
 
-    # plt.imshow(im_bw, cmap='gray')
-    # plt.title('Corners'), plt.xticks([]), plt.yticks([])
-    # plt.show()
-    return cv2.bitwise_not(im_bw + inv)
+    # Combine the two images to obtain a 'mask'
+    combo = cv2.bitwise_and(im_bw, im_flood_fill)
 
+    # Find the contour of the rocketship, the largest is the border
+    contours, hierarchy = cv2.findContours(combo, 2, 1)
+    sorted_list = list(sorted(contours, key=len))
+    cnt1 = sorted_list[-2]
 
-img = cv2.imread('pics/rocket_s1.jpeg')
-template = cv2.imread('pics/rocket.jpg', 0)  # the template
-rocket_gray, rocket_rgb = get_rocket(img)
-rocket_rgb = cv2.cvtColor(rocket_rgb, cv2.COLOR_RGB2RGBA)
-
-mask1 = find_mask(rocket_gray)
-mask2 = find_mask(template)
-mask1 = mask1*255
-
-img = Image.fromarray(rocket_rgb)
-# img = img.convert("RGBA")
-mask = Image.fromarray(mask1)
-# print(list(mask.getdata()))
-# img = img.convert("RGBA")
-
-# img.putalpha(mask1)
-img.save("pics/new_rocket.png")
+    # Print only the rocket contour
+    mask = np.zeros((h, w), np.uint8)
+    rocket_mask = cv2.drawContours(mask, [cnt1], 0, 255, thickness=cv2.FILLED)
+    return rocket_mask
 
 
-plt.imshow(mask1,cmap = 'gray')
-plt.title('Corners'), plt.xticks([]), plt.yticks([])
-plt.show()
-# ret, thresh = cv2.threshold(mask1, 127, 255,0)
-# print(thresh)
-# ret, thresh2 = cv2.threshold(mask2, 127, 255,0)
-contours1,hierarchy1 = cv2.findContours(mask1,2,1)
-contours2,hierarchy2 = cv2.findContours(mask2,2,1)
+def save_wo_background(img):
+    rocket_gray, rocket_rgb = get_rocket(img)
+    rocket_rgb = cv2.cvtColor(rocket_rgb, cv2.COLOR_BGR2BGRA)
+    mask = find_mask(rocket_gray)
+    rocket_rgb[:, :, 3] = mask
+    cv2.imwrite("pics/new_rocket1.png", rocket_rgb)
 
 
-ret = cv2.matchShapes(contours1[0],contours2[0],1,0.0)
-print( ret )
+img = cv2.imread('pics/rocket_ma1.jpeg')
+save_wo_background(img)
+
+
+# plt.imshow(mask1,cmap = 'gray')
+# plt.title('Corners'), plt.xticks([]), plt.yticks([])
+# plt.show()
+#
+# template = cv2.imread('pics/rocket.jpg', 0)  # the template
+# mask2 = find_mask(template)
+# contours1,hierarchy1 = cv2.findContours(mask1,2,1)
+# contours2,hierarchy2 = cv2.findContours(mask2,2,1)
+#
+# ret = cv2.matchShapes(contours1[0],contours2[0],1,0.0)
+# print( ret )
 
