@@ -1,4 +1,5 @@
 Flask
 opencv-python
+libgl1
 Pillow
 numpy
