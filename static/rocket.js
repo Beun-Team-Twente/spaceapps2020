@@ -162,12 +162,8 @@ var moveStars = new function() {
 
 window.playCountdownAudio = function(){
 	console.log("Countdown!");
-	// new Audio('/static/countdown.mp3').play(); // TODO;
-
-	setInterval(function(){
-		startLaunch = true;
-		console.log("Boooom!");
-	}, 10000);
+	startLaunch = true;
+	console.log("Boooom!");
 }
 
 window.setSceneData = function(drawing_id, other_drawings){
