@@ -44,10 +44,31 @@ def upload_file():
             'rockets': rockets
         })
 
+@app.route("/land", methods=["GET"])
+def land_rocket():
+    drawing_id = request.args.get('drawing_id')
+    drawing_location = request.args.get('location')
+    result_error = ""
+    try:
+        result_error = drawing_handler.land(drawing_id, drawing_location)
+    except Exception as e: 
+        result_error = f"Error while landing: {e}"
+
+    return json.dumps({"error": result_error})
+
+@app.route("/request")
+def request_drawings():
+    drawings = drawing_handler.get_other_drawings('')
+    return json.dumps({'drawings': [{'drawing': i[1].decode('utf-8'), 'location': i[3]} for i in drawings]})
+
 @app.teardown_appcontext
 def close_database_connection(exception): # Automatically close the DB when stopping the App
     db.close()
 
 if __name__ == "__main__":
     print(f"Using port {PORT}")
+    
+    with app.app_context():
+        db.init_db()
+
     app.run(threaded = True, host = '0.0.0.0', port = PORT)
