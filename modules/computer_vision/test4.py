@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 
 img1 = cv2.imread('pics/rocket.jpg', 0)         # queryImage
 # img1 = cv2.GaussianBlur(img1,(15, 15),0)
-img2 = cv2.imread('pics/rocket_s1.jpeg',0) # trainImage
+img2 = cv2.imread('pics/rocket_m1.jpeg',0) # trainImage
 
 MIN_MATCH_COUNT = 10
 
@@ -28,37 +28,39 @@ for m,n in matches:
         good.append(m)
 
 if len(good)>MIN_MATCH_COUNT:
-    src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
-    dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
-
-    M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
+    src_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
+    dst_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
+    M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
     matchesMask = mask.ravel().tolist()
 
-    h,w = img1.shape
-    pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
-    dst = cv2.perspectiveTransform(pts,M)
-
-    img2 = cv2.polylines(img2,[np.int32(dst)],True,255,3, cv2.LINE_AA)
-
+    h, w = img2.shape
+    pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
+    dst = cv2.perspectiveTransform(pts, M)
+    warped = cv2.warpPerspective(img2, M, (img1.shape[1], img1.shape[0]))
 else:
     print("Not enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT))
     matchesMask = None
 
+src_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
+dst_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
+M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
+matchesMask = mask.ravel().tolist()
 
-draw_params = dict(matchColor = (0,255,0),
-                   singlePointColor = (255,0,0),
-                   matchesMask = matchesMask,
-                   flags = 0)
+h,w = img2.shape
+pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
+dst = cv2.perspectiveTransform(pts,M)
+print(dst)
+warped = cv2.warpPerspective(img2, M, (img1.shape[1], img1.shape[0]))
+
 
 draw_params = dict(matchColor = (0,255,0), # draw matches in green color
                    singlePointColor = None,
                    matchesMask = matchesMask, # draw only inliers
                    flags = 2)
 
-img3 = cv2.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
+# img3 = cv2.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
 
-
-plt.imshow(img3,cmap = 'gray')
+plt.imshow(warped,cmap = 'gray')
 plt.title('Corners'), plt.xticks([]), plt.yticks([])
 plt.show()
 # cv2.imshow('image', img3)
