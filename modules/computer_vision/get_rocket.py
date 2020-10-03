@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from PIL import Image
 import os
 
-from . import conversions
+import conversions
 
 MIN_MATCH_COUNT = 10
 
@@ -57,6 +57,7 @@ def find_mask(img):
 
     # Combine the two images to obtain a 'mask'
     combo = cv2.bitwise_and(im_bw, im_flood_fill)
+
 
     # Find the contour of the rocket ship, the largest is the border
     contours, hierarchy = cv2.findContours(combo, 2, 1)
