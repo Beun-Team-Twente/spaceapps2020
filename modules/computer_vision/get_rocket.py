@@ -55,15 +55,19 @@ def find_mask(img):
     # Combine the two images to obtain a 'mask'
     combo = cv2.bitwise_and(im_bw, im_flood_fill)
 
-    # Find the contour of the rocketship, the largest is the border
+    # Find the contour of the rocket ship, the largest is the border
     contours, hierarchy = cv2.findContours(combo, 2, 1)
     sorted_list = list(sorted(contours, key=len))
-    cnt1 = sorted_list[-2]
 
-    # Print only the rocket contour
-    mask = np.zeros((h, w), np.uint8)
-    rocket_mask = cv2.drawContours(mask, [cnt1], 0, 255, thickness=cv2.FILLED)
-    return rocket_mask
+    # Check size of contour
+    for c in sorted_list:
+        mask = np.zeros((h, w), np.uint8)
+        rocket_mask = cv2.drawContours(mask, [c], 0, 255, thickness=cv2.FILLED)
+        area = np.sum(rocket_mask) / 255
+        if 207037*1.1 >= area >= 207037*0.9:
+            # Print only the rocket contour
+            return rocket_mask
+    print("No proper contour has been found, please try again!")
 
 
 def save_wo_background(img):
@@ -71,12 +75,11 @@ def save_wo_background(img):
     rocket_rgb = cv2.cvtColor(rocket_rgb, cv2.COLOR_BGR2BGRA)
     mask = find_mask(rocket_gray)
     rocket_rgb[:, :, 3] = mask
-    cv2.imwrite("pics/new_rocket1.png", rocket_rgb)
+    cv2.imwrite("pics/new_rocket.png", rocket_rgb)
 
 
-img = cv2.imread('pics/rocket_ma1.jpeg')
+img = cv2.imread('pics/rocket_ma2.jpeg')
 save_wo_background(img)
-
 
 # plt.imshow(mask1,cmap = 'gray')
 # plt.title('Corners'), plt.xticks([]), plt.yticks([])
