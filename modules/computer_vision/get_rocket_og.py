@@ -1,17 +1,14 @@
 import cv2
 import numpy as np
-# from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt
 from PIL import Image
-import os
-
-from . import conversions
 
 MIN_MATCH_COUNT = 10
 
 
 def get_rocket(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    template = cv2.imread(os.path.join(os.path.dirname(__file__), 'pics/rocket.jpg'), 0)  # the template
+    template = cv2.imread('pics/rocket.jpg', 0)  # the template
 
     # Find the SIFT points
     sift = cv2.SIFT_create()
@@ -78,9 +75,21 @@ def save_wo_background(img):
     rocket_rgb = cv2.cvtColor(rocket_rgb, cv2.COLOR_BGR2BGRA)
     mask = find_mask(rocket_gray)
     rocket_rgb[:, :, 3] = mask
-    return conversions.opencv_to_pil(rocket_rgb)
+    cv2.imwrite("pics/new_rocket.png", rocket_rgb)
 
-def run(pil_img):
-    # Run the algorithm on a PIL image
-    img = conversions.pil_to_opencv(pil_img)
-    return save_wo_background(img)
+
+img = cv2.imread('pics/rocket_ma2.jpeg')
+save_wo_background(img)
+
+# plt.imshow(mask1,cmap = 'gray')
+# plt.title('Corners'), plt.xticks([]), plt.yticks([])
+# plt.show()
+#
+# template = cv2.imread('pics/rocket.jpg', 0)  # the template
+# mask2 = find_mask(template)
+# contours1,hierarchy1 = cv2.findContours(mask1,2,1)
+# contours2,hierarchy2 = cv2.findContours(mask2,2,1)
+#
+# ret = cv2.matchShapes(contours1[0],contours2[0],1,0.0)
+# print( ret )
+

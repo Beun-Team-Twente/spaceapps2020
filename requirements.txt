@@ -1,3 +1,4 @@
 Flask
-opencv-python
-sqlite3
+opencv-python-headless==4.2.0.32
+Pillow
+numpy
