@@ -11,37 +11,54 @@ background.fillColor = new Color(1, 0, 0);
 
 var backgroundLayer = project.activeLayer;
 var starLayer = new Layer();
+var surfaceLayer = new Layer();
+
+
+var innerFlame = new Path({
+    segments: [[0, -50], [100, 20], [25, 185], [-25, 185], [-100, 20]],
+    fillColor: 'orange',
+    closed: true
+});
+innerFlame.scale(view.bounds.size.height/1200);
+//innerFlame.translate(new Point(0,view.bounds.size.height/3);
+innerFlame.smooth();
+innerFlame.position = view.center + new Point(0, view.bounds.size.height/3);
+outerFlame = innerFlame.clone();
+outerFlame.fillColor = 'red';
+outerFlame.scale(1.3);
+outerFlame.bringToFront();
+innerFlame.bringToFront();
 
 // Keyframes
-var duration = [5, 18, 5, 5, 20, 10]
-var starsOpacity = [0, 0, 0.1, 1, 1, 1, 0];
-var starsSpeed = [0, 80, 120, 130, 130, 130, 0];
-var starsAngle = [90, 90, 90, 90, 90, 270, 270];
+var duration = [5, 0.1, 8, 5, 5, 20, 10, 0.1]
+var starsOpacity = [0, 0, 0, 0.1, 1, 1, 1, 0, 0];
+var starsSpeed = [0, 0, 80, 120, 130, 130, 130, 0, 0];
+var starsAngle = [90, 90, 90, 90, 90, 90, 270, 270, 270];
 var backgroundGradientTop = [
+	new Color(0.33, 0.8, 1),
 	new Color(0.33, 0.8, 1),
 	new Color(0.33, 0.8, 1),
 	new Color(0, 0.5, 0.71),
 	new Color(0, 0, 0),
 	new Color(0, 0, 0),
 	new Color(0, 0, 0),
+	new Color(0.37, 0.33, 0.3),
 	new Color(0.37, 0.33, 0.3)
 ];
 var backgroundGradientBot = [
+	new Color(0.81, 0.91, 1),
 	new Color(0.81, 0.91, 1),
 	new Color(0.81, 0.91, 1),
 	new Color(0.33, 0.8, 1),
 	new Color(0, 0, 0),
 	new Color(0, 0, 0),
 	new Color(0, 0, 0),
+	new Color(0.68, 0.52, 0.37),
 	new Color(0.68, 0.52, 0.37)
 ];
+var flameSize = [0, 0, 1, 1, 0, 0, 0, 1, 0];
 
 
-console.log(backgroundGradientTop[1]);
-console.log(backgroundGradientTop[2]);
-console.log(backgroundGradientTop[1]/2);
-console.log(backgroundGradientTop[2]/2);
-console.log(backgroundGradientTop[2]/2+backgroundGradientTop[1]/2);
 // Functions
 
 // InterPolated KeyFrame
@@ -66,6 +83,7 @@ function drawBackground() {
 	};	
 }
 
+starLayer.activate();
 var moveStars = new function() {
 	// The amount of symbol we want to place;
 	var count = 50;
@@ -136,6 +154,12 @@ var moveStars = new function() {
 	};
 };
 
+surfaceLayer.activate();
+function drawSurface() {
+	var earth = new Raster('earth');
+	earth.position = view.center;
+}
+
 view.onResize = function(event) {
 	background.bounds = view.bounds;
 };
@@ -168,9 +192,8 @@ view.onFrame = function(event) {
 		}
 	}
 
-	//console.log("Travel: " + travel);
-
-
+	innerFlame.scale(1+0.01*Math.sin(event.time*25));
+	outerFlame.scale(1+0.01*Math.cos(event.time*25));
 
 	// Draw layers
 	backgroundLayer.activate();
@@ -180,4 +203,6 @@ view.onFrame = function(event) {
 	starsVector *= ipkf(starsSpeed);
 	starsVector.angle = ipkf(starsAngle);
 	moveStars(starsVector);
+	innerFlame.opacity = ipkf(flameSize);
+	outerFlame.opacity = ipkf(flameSize);
 };
