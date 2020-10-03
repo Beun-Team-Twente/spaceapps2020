@@ -29,11 +29,12 @@ def upload_file():
         img = request.files['drawing'].read()
         img = Image.open(io.BytesIO(img))
 
-        drawing_id, drawing_blob, rockets = drawing_handler.store(img)
+        drawing_id, drawing_blob, other_drawings = drawing_handler.store(img)
         drawing_blob = 'data:image/jpeg;base64,' + drawing_blob
 
-        for r in range(len(rockets)):
-            rockets[r]['drawing'] = 'data:image/jpeg;base64,' + rockets[r]['drawing'].decode('utf-8')
+        for r in range(len(other_drawings)):
+            other_drawings[r]['drawing'] = 'data:image/jpeg;base64,' + other_drawings[r]['drawing'].decode('utf-8')
+            other_drawings[r]['location'] = [int(i) for i in other_drawings[r]['location'].replace(" ","").split(",")]
     except Exception as e:
         return json.dumps({'error': str(e)})
 
@@ -41,7 +42,7 @@ def upload_file():
             'error':'',
             'drawing_id': drawing_id,
             'drawing': drawing_blob,
-            'rockets': rockets
+            'other_drawings': other_drawings
         })
 
 @app.route("/land", methods=["GET"])
@@ -56,10 +57,22 @@ def land_rocket():
 
     return json.dumps({"error": result_error})
 
-@app.route("/request")
+@app.route("/request_site")
 def request_drawings():
-    drawings = drawing_handler.get_other_drawings('')
-    return json.dumps({'drawings': [{'drawing': i[1].decode('utf-8'), 'location': i[3]} for i in drawings]})
+    try:
+        drawings = [{'drawing': i[1], 'location': i[3]} for i in drawing_handler.get_other_drawings('')]
+        for r in range(len(drawings)):
+            drawings[r]['drawing'] = 'data:image/jpeg;base64,' + drawings[r]['drawing'].decode('utf-8')
+            drawings[r]['location'] = [int(i) for i in drawings[r]['location'].replace(" ","").split(",")]
+
+        return json.dumps({
+            "error":'',
+            "drawings": drawings
+            })
+    except Exception as e:
+        return json.dumps({
+            "error": f"Error while requesting site: {e}"
+            })
 
 @app.teardown_appcontext
 def close_database_connection(exception): # Automatically close the DB when stopping the App
