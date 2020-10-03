@@ -1,6 +1,10 @@
 .DS_Store
 venv/
 
+drawings.sqlite
+drawings.sqlite
+update-test.py
+
 *.pyc
 __pycache__/
 
