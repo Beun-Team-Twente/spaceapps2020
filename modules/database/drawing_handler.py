@@ -69,7 +69,7 @@ def store(img):
     
     # Create image blob
     buffer = io.BytesIO()
-    img.save(buffer, format = "JPEG")
+    img.save(buffer, format = "PNG")
     drawing_blob = base64.b64encode(buffer.getvalue())
 
     # Store blob to database

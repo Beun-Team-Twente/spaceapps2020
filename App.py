@@ -5,6 +5,7 @@ import io
 import json
 
 from modules.database import db, drawing_handler
+from modules.computer_vision import get_rocket
 
 app = Flask(__name__, static_url_path='/static', static_folder='static', template_folder='html')
 
@@ -24,19 +25,22 @@ def upload_file():
     drawing_blob = ""
     drawing_id = 0
     rockets = [] # [{'data': base64-image, 'location': location}, ..]
-    try:
-        f = request.files['drawing']
-        img = request.files['drawing'].read()
-        img = Image.open(io.BytesIO(img))
+    # try:
+    f = request.files['drawing']
+    img = request.files['drawing'].read()
+    img = Image.open(io.BytesIO(img)).convert('RGB')
 
-        drawing_id, drawing_blob, other_drawings = drawing_handler.store(img)
-        drawing_blob = 'data:image/jpeg;base64,' + drawing_blob
+    # Process with the computer vision module.
+    img = get_rocket.run(img)
 
-        for r in range(len(other_drawings)):
-            other_drawings[r]['drawing'] = 'data:image/jpeg;base64,' + other_drawings[r]['drawing'].decode('utf-8')
-            other_drawings[r]['location'] = [int(i) for i in other_drawings[r]['location'].replace(" ","").split(",")]
-    except Exception as e:
-        return json.dumps({'error': str(e)})
+    drawing_id, drawing_blob, other_drawings = drawing_handler.store(img)
+    drawing_blob = 'data:image/jpeg;base64,' + drawing_blob
+
+    for r in range(len(other_drawings)):
+        other_drawings[r]['drawing'] = 'data:image/jpeg;base64,' + other_drawings[r]['drawing'].decode('utf-8')
+        other_drawings[r]['location'] = [int(i) for i in other_drawings[r]['location'].replace(" ","").split(",")]
+    # except Exception as e:
+    #     return json.dumps({'error': str(e)})
 
     return json.dumps({
             'error':'',
