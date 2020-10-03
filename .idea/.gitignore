@@ -1,8 +1,3 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-# Datasource local storage ignored files
-/../../../../../../:\Users\melis\PycharmProjects\beunteamtwente-3.1-beta-rc2.1\.idea/dataSources/
-/dataSources.local.xml
-# Editor-based HTTP Client requests
-/httpRequests/

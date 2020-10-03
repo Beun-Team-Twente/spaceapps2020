@@ -1,0 +1,8 @@
+{
+  "name": "beunteamtwente-3.1-beta-rc2.1",
+  "description": "",
+  "image": "heroku/python",
+  "repository": "https://git.heroku.com/beunteamtwente-spaceapps.git",
+  "keywords": [ ],
+  "addons": [ ],
+}
