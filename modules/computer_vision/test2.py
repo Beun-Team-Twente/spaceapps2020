@@ -1,10 +1,29 @@
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
 
-img = cv2.imread('pics/rocket_s1.jpeg', 0)
-kernel_size = 5
-blur_gray = cv2.GaussianBlur(img,(kernel_size, kernel_size),0)
+img = cv2.imread('pics/rocket_s1.jpeg')
+
+#cv2.imshow('image', img)
+# Maintain output window utill
+# user presses a key
+#cv2.waitKey(0)
+
+# Destroying present windows on screen
+#cv2.destroyAllWindows()
+
+gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+
+kernel_size = 15
+blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0)
+
+#cv2.imshow('image2', blur_gray)
+# Maintain output window utill
+# user presses a key
+#cv2.waitKey(0)
+
+# Destroying present windows on screen
+#cv2.destroyAllWindows()
+
 
 low_threshold = 50
 high_threshold = 150
@@ -29,14 +48,25 @@ for line in lines:
 # Draw the lines on the  image
 lines_edges = cv2.addWeighted(img, 0.8, line_image, 1, 0)
 
+#cv2.imshow('image3', lines_edges)
+# Maintain output window utill
+# user presses a key
+#cv2.waitKey(0)
 
-gray = np.float32(edges)
+# Destroying present windows on screen
+#cv2.destroyAllWindows()
+
 dst = cv2.cornerHarris(gray,2,3,0.04)
+print(dst.shape)
+print(img.shape)
+
+#result is dilated for marking the corners, not important
 dst = cv2.dilate(dst,None)
 
-plt.subplot(121),plt.imshow(img,cmap = 'gray')
-plt.title('Original Image'), plt.xticks([]), plt.yticks([])
-plt.subplot(122),plt.imshow(lines_edges,cmap = 'gray')
-plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
+# Threshold for an optimal value, it may vary depending on the image.
+img[dst>0.01*dst.max()]=[0,0,255]
 
-plt.show()
+#cv2.imshow('dst',img)
+#if cv2.waitKey(0) & 0xff == 27:
+#    cv2.destroyAllWindows()
+
