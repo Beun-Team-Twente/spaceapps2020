@@ -5,12 +5,18 @@ var PERIOD = 10;
 var time = 0;
 var travel = 0;
 
+var startLaunch = false;
+
 // Shapes
 var background = new Path.Rectangle(view.bounds);
 background.fillColor = new Color(1, 0, 0);
 
 var backgroundLayer = project.activeLayer;
 var starLayer = new Layer();
+
+// Backend data
+var drawing_id = -1;
+var other_drawings = [];
 
 // Keyframes
 var duration = [5, 18, 5, 5, 20, 10]
@@ -136,24 +142,44 @@ var moveStars = new function() {
 	};
 };
 
+window.playCountdownAudio = function(){
+	console.log("Countdown!");
+	// new Audio('/static/countdown.mp3').play(); // TODO;
+
+	setInterval(function(){
+		startLaunch = true;
+		console.log("Boooom!");
+	}, 10000);
+}
+
+window.setSceneData = function(drawing_id, other_drawings){
+	window.drawing_id = drawing_id;
+	drawing_id = drawing_id;
+	window.other_drawings = other_drawings;
+	other_drawings = other_drawings;
+}
+
 view.onResize = function(event) {
 	background.bounds = view.bounds;
 };
 
 view.onFrame = function(event) {
+
 	time = event.time;
 	var transition = false;
 
-	if (travel < duration.length) {
-		var oldTravel = travel;
-		travel += event.delta/duration[Math.floor(travel)];
-		if (Math.floor(oldTravel)<Math.floor(travel)) {
-			transition = true;
+	if (startLaunch){
+		if (travel < duration.length) {
+			var oldTravel = travel;
+			travel += event.delta/duration[Math.floor(travel)];
+			if (Math.floor(oldTravel)<Math.floor(travel)) {
+				transition = true;
+			}
+		} else if (travel != duration.length) {
+			travel = duration.length;
 		}
-	} else if (travel != duration.length) {
-		travel = duration.length;
 	}
-	
+
 	if (transition) {
 		console.log(Math.floor(travel));
 		switch(Math.floor(travel)) {
