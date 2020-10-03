@@ -1,7 +1,7 @@
 from flask import Flask
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static', static_folder='static')
 
 PORT = 5000
 
@@ -13,7 +13,6 @@ if 'PORT' in os.environ:
 @app.route("/")
 def root():
     return "<p>Hello, World!</p>"
-
 
 if __name__ == "__main__":
     print(f"Using port {PORT}")
