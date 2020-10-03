@@ -10,7 +10,7 @@ Run `pip install -r requirements.txt` to install all project dependencies.
   
   **Returns:** JSON
   **Example Response:**
-    ```json 
+    ``` 
     {
         "error":"",
         "drawing_id": drawing_id,
@@ -34,7 +34,7 @@ Run `pip install -r requirements.txt` to install all project dependencies.
   **Returns:** JSON
   **Example Request:** `/land?drawing_id=42&location=180,30`
   **Example Response:**
-    ```json 
+    ``` 
     {
         "error":""
     }
@@ -46,7 +46,7 @@ Run `pip install -r requirements.txt` to install all project dependencies.
   **GET Parameters:** None
   **Returns:** JSON
   **Example Response:**
-    ```json 
+    ``` 
     {
         "error":"",
         "drawings": [

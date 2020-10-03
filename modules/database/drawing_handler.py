@@ -16,7 +16,6 @@ def get_other_drawings(drawing_id):
     query_results = db.query_db("SELECT ID, drawing, created, location from Drawings ORDER BY datetime(created) DESC")
 
     # Filter out all the results which don't have a location
-    # results = tuple(filter(lambda r: (not r[3]) and (r[0] != drawing_id), results))
     results = []
     for k in query_results:
         if k[0] == drawing_id:
