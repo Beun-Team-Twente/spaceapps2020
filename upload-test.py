@@ -12,5 +12,5 @@ if len(sys.argv) == 1:
     exit(1)
 
 files = {'drawing': open(sys.argv[1], 'rb')}
-print("\nServer-response:")
+print("Server-response:")
 print(requests.post(API_SERVER, files=files).content.decode())

@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request
 import os
+from PIL import Image
+import io
+import json
+
+from modules.database import db, drawing_handler
 
 app = Flask(__name__, static_url_path='/static', static_folder='static', template_folder='html')
 
@@ -16,11 +21,32 @@ def root():
 
 @app.route("/upload", methods=["POST"])
 def upload_file():
-    f = request.files['drawing']
-    img = request.files['img_data'].read()
-    
-    return ""
-        
+    drawing_blob = ""
+    drawing_id = 0
+    rockets = [] # [{'data': base64-image, 'location': location}, ..]
+    try:
+        f = request.files['drawing']
+        img = request.files['drawing'].read()
+        img = Image.open(io.BytesIO(img))
+
+        drawing_id, drawing_blob, rockets = drawing_handler.store(img)
+        drawing_blob = 'data:image/jpeg;base64,' + drawing_blob
+
+        for r in range(len(rockets)):
+            rockets[r]['drawing'] = 'data:image/jpeg;base64,' + rockets[r]['drawing'].decode('utf-8')
+    except Exception as e:
+        return json.dumps({'error': str(e)})
+
+    return json.dumps({
+            'error':'',
+            'drawing_id': drawing_id,
+            'drawing': drawing_blob,
+            'rockets': rockets
+        })
+
+@app.teardown_appcontext
+def close_database_connection(exception): # Automatically close the DB when stopping the App
+    db.close()
 
 if __name__ == "__main__":
     print(f"Using port {PORT}")
