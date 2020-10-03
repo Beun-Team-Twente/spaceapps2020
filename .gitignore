@@ -4,6 +4,7 @@ venv/
 drawings.sqlite
 drawings.sqlite
 update-test.py
+upload-test.py
 
 *.pyc
 __pycache__/
