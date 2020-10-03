@@ -1,4 +1,5 @@
 Flask
 opencv-contrib-python-headless
+sqlite3
 Pillow
 numpy
