@@ -26,13 +26,13 @@ var innerFlame = new Path({
     fillColor: 'orange',
     closed: true
 });
-innerFlame.scale(view.bounds.size.height/1200);
+innerFlame.scale(view.bounds.size.height/2000);
 //innerFlame.translate(new Point(0,view.bounds.size.height/3);
 innerFlame.smooth();
 innerFlame.position = view.center + new Point(0, view.bounds.size.height/3);
 outerFlame = innerFlame.clone();
 outerFlame.fillColor = 'red';
-outerFlame.scale(1.3);
+outerFlame.scale(1.5);
 outerFlame.bringToFront();
 innerFlame.bringToFront();
 
@@ -68,7 +68,7 @@ var backgroundGradientBot = [
 	new Color(0.68, 0.52, 0.37)
 ];
 var flameSize = [0, 0, 1, 1, 0, 0, 0, 1, 0];
-var earthTop = [0, 1, 1, 1, 1, 1, 1, 1, 1];
+var earthTop = [0, 0, 0, 5, 5, 5, 5, 5, 5];
 var marsTop = [1, 1, 1, 1, 1, 1, 1, 1, 0];
 
 // Functions
@@ -96,8 +96,8 @@ function drawBackground() {
 }
 
 function drawSurfaces() {
-	earth.position = view.center + new Point(view.bounds.size.height*ipkf(earthTop), 0);
-	if (ipkf(earthTop)==1) {
+	earth.position = view.center + new Point(0, view.bounds.size.height*ipkf(earthTop));
+	if (ipkf(earthTop)>1) {
 		earth.opacity = 0;
 	}
 	//mars.position = view.center + new Point(view.bounds.size.height*ipkf(marsTop), 0);
