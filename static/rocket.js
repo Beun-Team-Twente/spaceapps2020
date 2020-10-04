@@ -171,6 +171,9 @@ window.setSceneData = function(drawing_id, other_drawings){
 	window.other_drawings = other_drawings;
 	other_drawings = other_drawings;
 	startLaunch = true;
+	setTimeout(function() {
+		new Audio('/static/countdown.mp3').play()
+	}, 1000);
 }
 
 view.onResize = function(event) {
