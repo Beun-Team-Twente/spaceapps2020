@@ -48,12 +48,12 @@ def land(drawing_id, location):
     # Returns error description
     try:
         drawing_id = int(drawing_id)
-        results = db.query_db(f"SELECT ID, drawing, created, location from Drawings WHERE ID={drawing_id}")
+        results = db.query_db("SELECT ID, drawing, created, location from Drawings WHERE ID={}".format(drawing_id))
         if len(results): # ID exists
             location_ok = len([int(i) for i in location.replace(" ","").split(",")]) == 2
 
             if(location_ok):
-                sqlite_update_query = f"UPDATE 'Drawings' SET location='{location}' WHERE ID={drawing_id}"
+                sqlite_update_query = "UPDATE 'Drawings' SET location='{location}' WHERE ID={}".format(drawing_id)
                 drawing_id = db.store_db(sqlite_update_query)
                 return ""
             else:
@@ -61,7 +61,7 @@ def land(drawing_id, location):
         else:
             return "Wrong ID"
     except Exception as e:
-        return f"Error while landing in drawing_handler: {e}"
+        return "Error while landing in drawing_handler: {}".fomat(e)
 
 def store(img):
     # Store a processed (PIL) image to the database in base64 format
