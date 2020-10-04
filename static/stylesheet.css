@@ -2,6 +2,8 @@ body, html {
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
+	/*height: 100%;
+	width: 100%;*/
 }
 
 #svg-earth, #svg-mars {
@@ -10,7 +12,6 @@ body, html {
 	transform: translate(-50%,0);
 	position: absolute;
 }
-
 
 /* Canvas and Rockets */
 #canvas {
@@ -21,10 +22,10 @@ body, html {
 }
 
 #rocket {
-	height: 75vh;
+	height: 80vh;
 	position: absolute;
-	top: 50%;
 	left: 50%;
+	margin-top: 50vh;
 	transform: translate(-50%, -50%);
 }
 
