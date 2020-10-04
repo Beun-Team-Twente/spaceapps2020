@@ -25,22 +25,30 @@ def upload_file():
     drawing_blob = ""
     drawing_id = 0
     rockets = [] # [{'data': base64-image, 'location': location}, ..]
-    # try:
-    f = request.files['drawing']
-    img = request.files['drawing'].read()
-    img = Image.open(io.BytesIO(img)).convert('RGB')
+    try:
+        f = request.files['drawing']
+        img = request.files['drawing'].read()
+        img = Image.open(io.BytesIO(img)).convert('RGB')
 
-    # Process with the computer vision module.
-    img = get_rocket.run(img)
+        # Process with the computer vision module.
+        img = get_rocket.run(img)
+        if img == None:
+            # No contours found:
+            return json.dumps({
+                'error':'No contours'
+                })
 
-    drawing_id, drawing_blob, other_drawings = drawing_handler.store(img)
-    drawing_blob = 'data:image/jpeg;base64,' + drawing_blob
+        drawing_id, drawing_blob, other_drawings = drawing_handler.store(img)
+        drawing_blob = 'data:image/jpeg;base64,' + drawing_blob
 
-    for r in range(len(other_drawings)):
-        other_drawings[r]['drawing'] = 'data:image/jpeg;base64,' + other_drawings[r]['drawing'].decode('utf-8')
-        other_drawings[r]['location'] = [int(i) for i in other_drawings[r]['location'].replace(" ","").split(",")]
-    # except Exception as e:
-    #     return json.dumps({'error': str(e)})
+        for r in range(len(other_drawings)):
+            other_drawings[r]['drawing'] = 'data:image/jpeg;base64,' + other_drawings[r]['drawing'].decode('utf-8')
+            other_drawings[r]['location'] = [int(i) for i in other_drawings[r]['location'].replace(" ","").split(",")]
+    except Exception as e:
+        # return json.dumps({'error': str(e)})
+        return json.dumps({
+                'error':'No contours' # Will alert to try reuploading
+                })
 
     return json.dumps({
             'error':'',
@@ -78,18 +86,18 @@ def request_drawings():
             "error": f"Error while requesting site: {e}"
             })
 
-# DEBUGGING: Disable cache
-@app.after_request
-def add_header(r):
-    """
-    Add headers to both force latest IE rendering engine or Chrome Frame,
-    and also to cache the rendered page for 10 minutes.
-    """
-    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    r.headers["Pragma"] = "no-cache"
-    r.headers["Expires"] = "0"
-    r.headers['Cache-Control'] = 'public, max-age=0'
-    return r
+# # DEBUGGING: Disable cache
+# @app.after_request
+# def add_header(r):
+#     """
+#     Add headers to both force latest IE rendering engine or Chrome Frame,
+#     and also to cache the rendered page for 10 minutes.
+#     """
+#     r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+#     r.headers["Pragma"] = "no-cache"
+#     r.headers["Expires"] = "0"
+#     r.headers['Cache-Control'] = 'public, max-age=0'
+#     return r
 
 @app.teardown_appcontext
 def close_database_connection(exception): # Automatically close the DB when stopping the App

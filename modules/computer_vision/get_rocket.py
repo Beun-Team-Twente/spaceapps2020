@@ -58,6 +58,7 @@ def find_mask(img):
     # Combine the two images to obtain a 'mask'
     combo = cv2.bitwise_and(im_bw, im_flood_fill)
 
+
     # Find the contour of the rocket ship, the largest is the border
     contours, hierarchy = cv2.findContours(combo, 2, 1)
     sorted_list = list(sorted(contours, key=len))
@@ -70,13 +71,19 @@ def find_mask(img):
         if 207037*1.1 >= area >= 207037*0.9:
             # Print only the rocket contour
             return rocket_mask
+
     print("No proper contour has been found, please try again!")
+    return None
 
 
 def save_wo_background(img):
     rocket_gray, rocket_rgb = get_rocket(img)
     rocket_rgb = cv2.cvtColor(rocket_rgb, cv2.COLOR_BGR2BGRA)
     mask = find_mask(rocket_gray)
+
+    if mask == None: # No contours found
+        return None
+
     rocket_rgb[:, :, 3] = mask
     return conversions.opencv_to_pil(rocket_rgb)
 

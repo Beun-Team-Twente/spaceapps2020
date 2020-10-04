@@ -42,8 +42,10 @@ function readURL(input) {
 
           if(data['error'] !== ''){
             console.error(data['error'])
-          } else {
-            window.playCountdownAudio();
+            if(data['error'] == 'No contours'){
+              alert("Photo is niet goed. Probeer op nieuw alsjeblieft.");
+              history.go(0);
+            }
           }
 
           $("#rocket").attr('src', data['drawing']);

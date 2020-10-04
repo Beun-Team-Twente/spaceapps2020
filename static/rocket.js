@@ -16,6 +16,11 @@ var starLayer = new Layer();
 var flameLayer = new Layer();
 var surfaceLayer = new Layer();
 
+surfaceLayer.activate();
+var earth = new Raster('png-earth');
+earth.position = view.center;
+earth.scale(view.bounds.size.height/earth.bounds.size.height);
+
 var innerFlame = new Path({
     segments: [[0, -50], [100, 20], [25, 185], [-25, 185], [-100, 20]],
     fillColor: 'orange',
@@ -160,17 +165,12 @@ var moveStars = new function() {
 	};
 };
 
-surfaceLayer.activate();
-var earth = new Raster('png-earth');
-earth.position = view.center;
-earth.scale(view.bounds.size.height/earth.bounds.size.height);
-
-
 window.setSceneData = function(drawing_id, other_drawings){
 	window.drawing_id = drawing_id;
 	drawing_id = drawing_id;
 	window.other_drawings = other_drawings;
 	other_drawings = other_drawings;
+	startLaunch = true;
 }
 
 view.onResize = function(event) {
