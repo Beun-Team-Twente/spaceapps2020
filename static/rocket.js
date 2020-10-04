@@ -13,8 +13,8 @@ background.fillColor = new Color(1, 0, 0);
 
 var backgroundLayer = project.activeLayer;
 var starLayer = new Layer();
+var flameLayer = new Layer();
 var surfaceLayer = new Layer();
-
 
 var innerFlame = new Path({
     segments: [[0, -50], [100, 20], [25, 185], [-25, 185], [-100, 20]],
@@ -160,15 +160,11 @@ var moveStars = new function() {
 	};
 };
 
-window.playCountdownAudio = function(){
-	console.log("Countdown!");
-	// new Audio('/static/countdown.mp3').play(); // TODO;
+surfaceLayer.activate();
+var earth = new Raster('png-earth');
+earth.position = view.center;
+earth.scale(view.bounds.size.height/earth.bounds.size.height);
 
-	setInterval(function(){
-		startLaunch = true;
-		console.log("Boooom!");
-	}, 10000);
-}
 
 window.setSceneData = function(drawing_id, other_drawings){
 	window.drawing_id = drawing_id;
@@ -223,6 +219,9 @@ view.onFrame = function(event) {
 	starsVector *= ipkf(starsSpeed);
 	starsVector.angle = ipkf(starsAngle);
 	moveStars(starsVector);
+	surfaceLayer.activate();
+	//
+	flameLayer.activate();
 	innerFlame.opacity = ipkf(flameSize);
 	outerFlame.opacity = ipkf(flameSize);
 };
