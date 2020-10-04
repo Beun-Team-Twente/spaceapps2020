@@ -14,7 +14,7 @@ PORT = 5000
 if 'PORT' in os.environ:
     # Needed for Heroku
     PORT = int(os.environ['PORT'])
-    print(f"Using port {PORT}")
+    print("Using port {}".format(PORT))
 
 @app.route("/")
 def root():
@@ -32,7 +32,7 @@ def upload_file():
 
         # Process with the computer vision module.
         img = get_rocket.run(img)
-        if img == None:
+        if img is None:
             # No contours found:
             return json.dumps({
                 'error':'No contours'
@@ -65,7 +65,7 @@ def land_rocket():
     try:
         result_error = drawing_handler.land(drawing_id, drawing_location)
     except Exception as e: 
-        result_error = f"Error while landing: {e}"
+        result_error = "Error while landing: {}".format(e)
 
     return json.dumps({"error": result_error})
 
@@ -83,7 +83,7 @@ def request_drawings():
             })
     except Exception as e:
         return json.dumps({
-            "error": f"Error while requesting site: {e}"
+            "error": "Error while requesting site: {}".format(e)
             })
 
 # # DEBUGGING: Disable cache
@@ -104,7 +104,7 @@ def close_database_connection(exception): # Automatically close the DB when stop
     db.close()
 
 if __name__ == "__main__":
-    print(f"Using port {PORT}")
+    print("Using port {}".format(PORT))
     
     with app.app_context():
         db.init_db()

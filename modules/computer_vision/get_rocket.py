@@ -81,7 +81,7 @@ def save_wo_background(img):
     rocket_rgb = cv2.cvtColor(rocket_rgb, cv2.COLOR_BGR2BGRA)
     mask = find_mask(rocket_gray)
 
-    if mask == None: # No contours found
+    if mask is None: # No contours found
         return None
 
     rocket_rgb[:, :, 3] = mask
