@@ -68,7 +68,8 @@ var backgroundGradientBot = [
 	new Color(0.68, 0.52, 0.37)
 ];
 var flameSize = [0, 0, 1, 1, 0, 0, 0, 1, 0];
-
+var earthTop = [0, 1, 1, 1, 1, 1, 1, 1, 1];
+var marsTop = [1, 1, 1, 1, 1, 1, 1, 1, 0];
 
 // Functions
 
@@ -92,6 +93,14 @@ function drawBackground() {
         origin: background.bounds.bottomCenter,
         destination: background.bounds.topCenter
 	};	
+}
+
+function drawSurfaces() {
+	earth.position = view.center + new Point(view.bounds.size.height*ipkf(earthTop), 0);
+	if (ipkf(earthTop)==1) {
+		earth.opacity = 0;
+	}
+	//mars.position = view.center + new Point(view.bounds.size.height*ipkf(marsTop), 0);
 }
 
 starLayer.activate();
@@ -220,7 +229,7 @@ view.onFrame = function(event) {
 	starsVector.angle = ipkf(starsAngle);
 	moveStars(starsVector);
 	surfaceLayer.activate();
-	//
+	drawSurfaces();
 	flameLayer.activate();
 	innerFlame.opacity = ipkf(flameSize);
 	outerFlame.opacity = ipkf(flameSize);
