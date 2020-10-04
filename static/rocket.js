@@ -41,6 +41,7 @@ innerFlame.bringToFront();
 // Backend data
 var drawing_id = -1;
 var other_drawings = [];
+var astronaut = "";
 
 // Keyframes
 //var duration = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 3, 1];
@@ -183,12 +184,16 @@ var moveStars = new function() {
 	};
 };
 
-window.setSceneData = function(drawing_id, other_drawings){
+window.setSceneData = function(drawing_id, other_drawings, astronaut){
+	window.astronaut = astronaut;
 	window.drawing_id = drawing_id;
 	drawing_id = drawing_id;
 	window.other_drawings = other_drawings;
 	other_drawings = other_drawings;
 	startLaunch = true;
+	setTimeout(function() {
+		new Audio('/static/countdown.mp3').play()
+	}, 1000);
 }
 
 view.onResize = function(event) {

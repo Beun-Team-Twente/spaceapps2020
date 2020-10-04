@@ -63,14 +63,19 @@ def land(drawing_id, location):
     except Exception as e:
         return "Error while landing in drawing_handler: {}".fomat(e)
 
+def get_drawing_blob(img):
+    # Get a base64 blob of the given PIL image
+    buffer = io.BytesIO()
+    img.save(buffer, format = "PNG")
+    drawing_blob = base64.b64encode(buffer.getvalue())
+    return drawing_blob.decode('utf-8')
+
 def store(img):
     # Store a processed (PIL) image to the database in base64 format
     created_date = datetime.datetime.now()
     
     # Create image blob
-    buffer = io.BytesIO()
-    img.save(buffer, format = "PNG")
-    drawing_blob = base64.b64encode(buffer.getvalue())
+    drawing_blob = get_drawing_blob(img)
 
     # Store blob to database
     sqlite_insert_with_param = """INSERT INTO 'Drawings'
@@ -84,4 +89,4 @@ def store(img):
     # Get other rockets in location
     rockets = [{'drawing': i[1], 'location': i[3]} for i in get_other_drawings(drawing_id)]
 
-    return drawing_id, drawing_blob.decode('utf-8'), rockets
+    return drawing_id, drawing_blob, rockets

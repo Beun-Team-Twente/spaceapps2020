@@ -5,7 +5,7 @@ import io
 import json
 
 from modules.database import db, drawing_handler
-from modules.computer_vision import get_rocket
+from modules.computer_vision import get_rocket, get_astronaut
 
 app = Flask(__name__, static_url_path='/static', static_folder='static', template_folder='html')
 
@@ -38,6 +38,10 @@ def upload_file():
                 'error':'No contours'
                 })
 
+        # Get astronaut
+        astronaut = get_astronaut.run(img)
+        astronaut_blob = 'data:image/jpeg;base64,' + drawing_handler.get_drawing_blob(astronaut)
+
         drawing_id, drawing_blob, other_drawings = drawing_handler.store(img)
         drawing_blob = 'data:image/jpeg;base64,' + drawing_blob
 
@@ -54,6 +58,7 @@ def upload_file():
             'error':'',
             'drawing_id': drawing_id,
             'drawing': drawing_blob,
+            'astronaut': astronaut_blob,
             'other_drawings': other_drawings
         })
 
