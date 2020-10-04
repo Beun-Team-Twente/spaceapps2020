@@ -50,6 +50,15 @@ body, html {
 	width: 60%;
 	margin: 0 auto;
 	text-align: center;
+	background: rgba(0,0,0,0.6);
+}
+
+#instructions > h1, h2, h3, p {
+	color: #fff;
+}
+
+#instructions > p > a {
+	color: #ffc72b !important;
 }
 
 .file-upload {
