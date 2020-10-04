@@ -45,7 +45,7 @@ var astronaut = "";
 
 // Keyframes
 //var duration = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 3, 1];
-var duration = [5, 0.1, 8, 5, 5, 20, 10, 3];
+var duration = [5, 1, 8, 5, 5, 20, 10, 3];
 var starsOpacity = [0, 0, 0, 0.1, 1, 1, 1, 0, 0];
 var starsSpeed = [0, 0, 80, 120, 130, 130, 130, 0, 0];
 var starsAngle = [90, 90, 90, 90, 90, 90, 270, 270, 270];
@@ -220,14 +220,19 @@ view.onFrame = function(event) {
 	if (transition) {
 		console.log(Math.floor(travel));
 		switch(Math.floor(travel)) {
-		  case 0:
-		    // code block
-		    break;
-		  case 1:
-		    new Audio('/static/launch.mp3').play()
-		    break;
-		  default:
-		    // code block
+			case 1:
+				new Audio('/static/launch.mp3').play();
+		    	break;
+			case 6:
+				new Audio('/static/landing.mp3').play();
+				break;
+			case 4:
+				new Audio('/static/sputnik.mp3').play();
+				break;
+			case 5:
+				new Audio('/static/sputnik.mp3').play();
+				break;
+		  	default:
 		}
 	}
 
