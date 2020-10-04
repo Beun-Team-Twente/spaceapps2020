@@ -23,6 +23,7 @@ function readURL(input) {
       $('#instructions').hide();
       $('.file-upload-image').attr('src', e.target.result);
       $('.file-upload-content').show();
+      $("#loader").css('visibility', 'visible');
       $('.image-title').html("Image"); // input.files[0].name
       var data = new FormData();
       const img_data = DataURIToBlob(e.target.result)
@@ -43,10 +44,13 @@ function readURL(input) {
           if(data['error'] !== ''){
             console.error(data['error'])
             if(data['error'] == 'No contours'){
-              alert("Photo is niet goed. Probeer op nieuw alsjeblieft.");
+              // alert("Photo is niet goed. Probeer op nieuw alsjeblieft.");
+              alert("Error:" + data['error']);
               history.go(0);
             }
           }
+
+          $("#loader").css('visibility', 'hidden');
 
           $("#rocket").attr('src', data['drawing']);
           drawing_id = data['drawing_id'];

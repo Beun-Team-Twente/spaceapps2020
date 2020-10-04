@@ -49,10 +49,10 @@ def upload_file():
             other_drawings[r]['drawing'] = 'data:image/jpeg;base64,' + other_drawings[r]['drawing'].decode('utf-8')
             other_drawings[r]['location'] = [int(i) for i in other_drawings[r]['location'].replace(" ","").split(",")]
     except Exception as e:
-        # return json.dumps({'error': str(e)})
-        return json.dumps({
-                'error':'No contours' # Will alert to try reuploading
-                })
+        return json.dumps({'error': str(e)})
+        # return json.dumps({
+        #         'error':'No contours' # Will alert to try reuploading
+        #         })
 
     return json.dumps({
             'error':'',
