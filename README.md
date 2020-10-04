@@ -1,3 +1,6 @@
+# SpaceApps Challenge 2020
+This is our entry for the NASA SpaceApps challenge 2020. Our project's board is located at: https://2020.spaceappschallenge.org/challenges/create/putting-art-artemis/teams/beun-team-twente-31-beta-rc21/stream
+
 # Python Dependencies
 Run `pip install -r requirements.txt` to install all project dependencies.
 
