@@ -6,11 +6,9 @@ body, html {
 	width: 100%;*/
 }
 
-#svg-earth, #svg-mars {
-	height: 100%;
-	left: 50%;
-	transform: translate(-50%,0);
+#png-earth, #png-mars {
 	position: absolute;
+	visibility: hidden;
 }
 
 /* Canvas and Rockets */

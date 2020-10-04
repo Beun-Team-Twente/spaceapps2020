@@ -20,6 +20,9 @@ surfaceLayer.activate();
 var earth = new Raster('png-earth');
 earth.position = view.center;
 earth.scale(view.bounds.size.height/earth.bounds.size.height);
+var mars = new Raster('png-mars');
+mars.position = view.center + new Point(0, view.bounds.size.height);
+mars.scale(view.bounds.size.height/mars.bounds.size.height);
 
 var innerFlame = new Path({
     segments: [[0, -50], [100, 20], [25, 185], [-25, 185], [-100, 20]],
@@ -27,7 +30,6 @@ var innerFlame = new Path({
     closed: true
 });
 innerFlame.scale(view.bounds.size.height/2000);
-//innerFlame.translate(new Point(0,view.bounds.size.height/3);
 innerFlame.smooth();
 innerFlame.position = view.center + new Point(0, view.bounds.size.height/3);
 outerFlame = innerFlame.clone();
@@ -41,7 +43,8 @@ var drawing_id = -1;
 var other_drawings = [];
 
 // Keyframes
-var duration = [5, 0.1, 8, 5, 5, 20, 10, 0.1]
+//var duration = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 3, 1];
+var duration = [5, 0.1, 8, 5, 5, 20, 10, 3];
 var starsOpacity = [0, 0, 0, 0.1, 1, 1, 1, 0, 0];
 var starsSpeed = [0, 0, 80, 120, 130, 130, 130, 0, 0];
 var starsAngle = [90, 90, 90, 90, 90, 90, 270, 270, 270];
@@ -100,6 +103,12 @@ function drawSurfaces() {
 	if (ipkf(earthTop)>1) {
 		earth.opacity = 0;
 	}
+	mars.position = view.center + new Point(0, view.bounds.size.height*ipkf(marsTop));
+	/*if (ipkf(marsTop)>1) {
+		mars.opacity = 0;
+	} else {
+		mars.opacity = 1;
+	}*/
 	//mars.position = view.center + new Point(view.bounds.size.height*ipkf(marsTop), 0);
 }
 
