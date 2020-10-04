@@ -51,8 +51,9 @@ function readURL(input) {
           $("#rocket").attr('src', data['drawing']);
           drawing_id = data['drawing_id'];
           other_drawings = data['other_drawings'];
+          astronaut = data['astronaut'];
           
-          window.setSceneData(drawing_id, other_drawings);
+          window.setSceneData(drawing_id, other_drawings, astronaut);
         }
       });
     };

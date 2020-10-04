@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import os
 
+from . import conversions
 
 def astronaut_face_adder(image):
     astronaut = cv2.imread(os.path.join(os.path.dirname(__file__), 'pics/astronaut.png'))  # the template
@@ -81,11 +82,16 @@ def astronaut_face_adder(image):
     else:
         return None
 
+def run(pil_img):
+    # Run the algorithm on a PIL image
+    img = conversions.pil_to_opencv(pil_img)
+    return conversions.opencv_to_pil(astronaut_face_adder(img))
 
-image = cv2.imread('pics/new_rocket3.png')
-testie = astronaut_face_adder(image)
-if testie is not None:
-    cv2.imshow("output", testie)
-    cv2.waitKey(0)
-else:
-    print('something went wrong')
+
+# image = cv2.imread('pics/new_rocket3.png')
+# testie = astronaut_face_adder(image)
+# if testie is not None:
+#     cv2.imshow("output", testie)
+#     cv2.waitKey(0)
+# else:
+#     print('something went wrong')

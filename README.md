@@ -21,6 +21,7 @@ Run `pip install -r requirements.txt` to install all project dependencies.
         "error":"",
         "drawing_id": drawing_id,
         "drawing": "base-64 image data",
+        "astronaut": "base-64 image data",
         "other_drawings": [
             {
                 {"data": "base-64 image data", "location": [x,y]},
